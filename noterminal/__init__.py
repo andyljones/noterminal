@@ -12,6 +12,11 @@ from notebook.base.handlers import IPythonHandler
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
+        # Create a new notebook in a temp dir
+        # Set its working directory?
+        # Redirect the requester to it
+        # Need a frontend extension to put in a 'im leaving' request on `onbeforeunload`
+        # Leaving request ends the session and deletes the notebook
         self.finish('Hello, world!')
 
 
