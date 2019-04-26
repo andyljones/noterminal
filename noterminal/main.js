@@ -10,7 +10,7 @@ define([
     function init() {
         $(window).on('beforeunload', function () { 
             var path = Jupyter.notebook.notebook_path
-            $.get('exit', {'path': path});
+            $.get('/exit', {'path': path});
         });
         return null;
     }

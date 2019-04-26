@@ -8,16 +8,28 @@ jupyter notebook --NotebookApp.nbserver_extensions="{'noterminal':True}"
 
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
+from pathlib import Path
+import uuid
+
+CACHE = Path('.cache')
+DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}"""
 
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
-        # Create a new notebook in a temp dir
-        # Set its working directory?
-        # Redirect the requester to it
-        # Need a frontend extension to put in a 'im leaving' request on `onbeforeunload`
-        # Leaving request ends the session and deletes the notebook
-        self.finish('Hello, world!')
+        path = CACHE / 'noterminal' / f'{uuid.uuid1().hex}.ipynb'
+        self.log.info(f'Creating noterminal at {path}')
+        path.parent.mkdir(exist_ok=True, parents=True)
+        path.write_text(DEFAULT)
+        self.redirect(f'/notebooks/{path}')
+
+class ExitHandler(IPythonHandler):
+
+    def get(self):
+        path = Path(self.get_argument('path', ''))
+        if path and (CACHE in path.parents):
+            self.log.info(f'Removing noterminal at {path}')
+            path.unlink() 
 
 
 def load_jupyter_server_extension(nb_server_app):
@@ -25,3 +37,6 @@ def load_jupyter_server_extension(nb_server_app):
 
     route = url_path_join(app.settings['base_url'], '/noterminal')
     app.add_handlers('.*$', [(route, NoterminalHandler)])
+
+    route = url_path_join(app.settings['base_url'], '/exit')
+    app.add_handlers('.*$', [(route, ExitHandler)])
