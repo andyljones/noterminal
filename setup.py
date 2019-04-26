@@ -6,4 +6,7 @@ setup(name='noterminal',
       author='Andy Jones',
       author_email='andyjones.ed@gmail.com',
       url='https://github.com/andyljones/noterminal',
-      packages=['noterminal'])
+      packages=['noterminal'],
+      install_requires=[
+            'jupyter_nbextensions_configurator'
+      ])

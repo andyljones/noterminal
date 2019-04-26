@@ -1,20 +1,22 @@
-# Example: https://jupyter-notebook.readthedocs.io/en/stable/extending/handlers.html
+"""Following https://jupyter-notebook.readthedocs.io/en/stable/extending/handlers.html
+
+Test it with
+```
+jupyter notebook --NotebookApp.nbserver_extensions="{'noterminal':True}"  
+```
+"""
 
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 
-class HelloWorldHandler(IPythonHandler):
+class NoterminalHandler(IPythonHandler):
+
     def get(self):
         self.finish('Hello, world!')
 
-def load_jupyter_server_extension(nb_server_app):
-    """
-    Called when the extension is loaded.
 
-    Args:
-        nb_server_app (NotebookWebApplication): handle to the Notebook webserver instance.
-    """
-    web_app = nb_server_app.web_app
-    host_pattern = '.*$'
-    route_pattern = url_path_join(web_app.settings['base_url'], '/hello')
-    web_app.add_handlers(host_pattern, [(route_pattern, HelloWorldHandler)])
+def load_jupyter_server_extension(nb_server_app):
+    app = nb_server_app.web_app
+
+    route = url_path_join(app.settings['base_url'], '/noterminal')
+    app.add_handlers('.*$', [(route, NoterminalHandler)])
