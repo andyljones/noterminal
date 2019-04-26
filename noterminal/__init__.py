@@ -17,7 +17,7 @@ DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}""
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
-        path = CACHE / 'noterminal' / f'{uuid.uuid1().hex}.ipynb'
+        path = CACHE / 'noterminal' / f'{uuid.uuid4().hex[:4]}.ipynb'
         self.log.info(f'Creating noterminal at {path}')
         path.parent.mkdir(exist_ok=True, parents=True)
         path.write_text(DEFAULT)
@@ -27,9 +27,12 @@ class ExitHandler(IPythonHandler):
 
     def get(self):
         path = Path(self.get_argument('path', ''))
+        kernel = self.get_argument('kernel', '')
         if path and (CACHE in path.parents):
             self.log.info(f'Removing noterminal at {path}')
+            self.kernel_manager.shutdown_kernel(kernel)
             path.unlink() 
+
 
 
 def load_jupyter_server_extension(nb_server_app):

@@ -10,7 +10,8 @@ define([
     function init() {
         $(window).on('beforeunload', function () { 
             var path = Jupyter.notebook.notebook_path
-            $.get('/exit', {'path': path});
+            var kernel = Jupyter.notebook.kernel.id
+            $.get('/exit', {'path': path, 'kernel': kernel});
         });
         return null;
     }
