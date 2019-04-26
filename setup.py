@@ -8,5 +8,6 @@ setup(name='noterminal',
       url='https://github.com/andyljones/noterminal',
       packages=['noterminal'],
       install_requires=[
-            'jupyter_nbextensions_configurator'
+            'jupyter',
+            'jupyter_nbextensions_configurator',
       ])
