@@ -10,6 +10,7 @@ from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 from pathlib import Path
 import uuid
+import aljpy
 
 CACHE = Path('.cache')
 DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}"""
@@ -17,7 +18,7 @@ DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}""
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
-        path = CACHE / 'noterminal' / f'{uuid.uuid4().hex[:4]}.ipynb'
+        path = CACHE / 'noterminal' / f'{aljpy.humanhash(n=2)}.ipynb'
         self.log.info(f'Creating noterminal at {path}')
         path.parent.mkdir(exist_ok=True, parents=True)
         path.write_text(DEFAULT)
