@@ -24,3 +24,7 @@ jupyter nbextension install noterminal/noterminal
 jupyter nbextension enable noterminal
 ```
 You might have to then run `jupyter nbextension list` and edit the `.jupyter/nbconfig/notebook.json` file to replace `noterminal` with `noterminal/main`. I think the yaml file should be doing this automatically, I'm not sure why it currently isn't.
+
+
+### TODO
+Together with stripcommon, this is most of the way to a terminal-esque experience. The final step would be to add  i-search-esque functionality to search back through previous cells

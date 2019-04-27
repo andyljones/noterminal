@@ -12,16 +12,17 @@ from pathlib import Path
 import uuid
 import aljpy
 
-CACHE = Path('.cache')
 DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}"""
+
+CREATED = set()
 
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
-        path = CACHE / 'noterminal' / f'{aljpy.humanhash(n=2)}.ipynb'
+        path = Path(f'.{aljpy.humanhash(n=2)}.ipynb')
         self.log.info(f'Creating noterminal at {path}')
-        path.parent.mkdir(exist_ok=True, parents=True)
         path.write_text(DEFAULT)
+        CREATED.add(path)
         self.redirect(f'/notebooks/{path}')
 
 class ExitHandler(IPythonHandler):
@@ -29,10 +30,11 @@ class ExitHandler(IPythonHandler):
     def get(self):
         path = Path(self.get_argument('path', ''))
         kernel = self.get_argument('kernel', '')
-        if path and (CACHE in path.parents):
+        if path in CREATED:
             self.log.info(f'Removing noterminal at {path}')
             self.kernel_manager.shutdown_kernel(kernel)
             path.unlink() 
+            CREATED.remove(path)
 
 
 
