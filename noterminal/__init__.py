@@ -6,6 +6,7 @@ jupyter notebook --NotebookApp.nbserver_extensions="{'noterminal':True}"
 ```
 """
 
+from tornado import web
 from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 from pathlib import Path
@@ -18,6 +19,7 @@ CREATED = set()
 
 class NoterminalHandler(IPythonHandler):
 
+    @web.authenticated
     def get(self):
         api_path = f'.{aljpy.humanhash(n=2)}.ipynb'
         os_path = Path(self.contents_manager._get_os_path(api_path))
@@ -28,6 +30,7 @@ class NoterminalHandler(IPythonHandler):
 
 class ExitHandler(IPythonHandler):
 
+    @web.authenticated
     def get(self):
         api_path = self.get_argument('path', '')
         kernel = self.get_argument('kernel', '')

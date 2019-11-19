@@ -7,6 +7,15 @@ define([
 ], function($, events, Jupyter) {
     "use strict";
 
+    function add_exit_event() {
+        $(window).on('beforeunload', function (event) { 
+            var path = Jupyter.notebook.notebook_path
+            var kernel = Jupyter.notebook.kernel.id
+            $.get('/exit', {'path': path, 'kernel': kernel});
+        });
+        return null;
+    }
+
     function add_open_action() {
         var handler = function () {
             window.open('/noterminal', '_blank');
@@ -23,28 +32,9 @@ define([
         Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,t', 'noterminal:create');
     }
 
-    function add_close_action() {
-        var handler = function () {
-            var path = Jupyter.notebook.notebook_path;
-            var kernel = Jupyter.notebook.kernel.id;
-            $.get('/exit', {'path': path, 'kernel': kernel});
-        };
-
-        var action = {
-            icon: 'fa-comment-times-square', // a font-awesome class used on buttons, etc
-            help    : 'Closes this notebook and deletes the underlying file',
-            help_index : 'zz',
-            handler : handler
-        };
-
-        Jupyter.actions.register(action, 'delete', 'noterminal');
-        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('q,q', 'noterminal:delete');
-    }
-
     function init() {
+        add_exit_event();
         add_open_action();
-        add_close_action();
-        add_shortcut();
     }
 
     function load_extension() {
