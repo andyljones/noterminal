@@ -7,16 +7,7 @@ define([
 ], function($, events, Jupyter) {
     "use strict";
 
-    function add_exit_event() {
-        $(window).on('beforeunload', function () { 
-            var path = Jupyter.notebook.notebook_path
-            var kernel = Jupyter.notebook.kernel.id
-            $.get('/exit', {'path': path, 'kernel': kernel});
-        });
-        return null;
-    }
-
-    function add_action() {
+    function add_open_action() {
         var handler = function () {
             window.open('/noterminal', '_blank');
         };
@@ -28,18 +19,32 @@ define([
             handler : handler
         };
 
-        var full_name = Jupyter.actions.register(action, 'create', 'noterminal');
-        Jupyter.toolbar.add_buttons_group([full_name]);
-    }
-
-    function add_shortcut() {
+        Jupyter.actions.register(action, 'create', 'noterminal');
         Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,t', 'noterminal:create');
     }
 
+    function add_close_action() {
+        var handler = function () {
+            var path = Jupyter.notebook.notebook_path;
+            var kernel = Jupyter.notebook.kernel.id;
+            $.get('/exit', {'path': path, 'kernel': kernel});
+        };
+
+        var action = {
+            icon: 'fa-comment-times-square', // a font-awesome class used on buttons, etc
+            help    : 'Closes this notebook and deletes the underlying file',
+            help_index : 'zz',
+            handler : handler
+        };
+
+        Jupyter.actions.register(action, 'delete', 'noterminal');
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('q,q', 'noterminal:delete');
+    }
+
     function init() {
-        add_exit_event()
-        add_action()
-        add_shortcut()
+        add_open_action();
+        add_close_action();
+        add_shortcut();
     }
 
     function load_extension() {

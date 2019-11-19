@@ -1,6 +1,4 @@
-Sometimes you want a transient notebook. This extension adds a `/noterminal` endpoint to Jupyter that creates a new, empty notebook in a temporary directory, then deletes it when you close the tab. 
-
-Once in a notebook, you can create a new noterminal with `noterminal:create` entry in the command palette, or the `T,T` shortcut.
+Sometimes you want a transient notebook. This extension adds a `t,t` shortcut to create a new, temporary notebook, and a `q,q` shortcut to destroy it.
 
 ### Dev Install
 Install the server extension:
