@@ -19,22 +19,24 @@ CREATED = set()
 class NoterminalHandler(IPythonHandler):
 
     def get(self):
-        path = Path(f'.{aljpy.humanhash(n=2)}.ipynb')
-        self.log.info(f'Creating noterminal at {path}')
-        path.write_text(DEFAULT)
-        CREATED.add(path)
-        self.redirect(f'/notebooks/{path}')
+        api_path = f'.{aljpy.humanhash(n=2)}.ipynb'
+        os_path = Path(self.contents_manager._get_os_path(api_path))
+        self.log.info(f'Creating noterminal at {api_path}')
+        os_path.write_text(DEFAULT)
+        CREATED.add(api_path)
+        self.redirect(f'/notebooks/{api_path}')
 
 class ExitHandler(IPythonHandler):
 
     def get(self):
-        path = Path(self.get_argument('path', ''))
+        api_path = self.get_argument('path', '')
         kernel = self.get_argument('kernel', '')
-        if path in CREATED:
-            self.log.info(f'Removing noterminal at {path}')
+        if api_path in CREATED:
+            self.log.info(f'Removing noterminal at {api_path}')
             self.kernel_manager.shutdown_kernel(kernel)
-            path.unlink() 
-            CREATED.remove(path)
+            os_path = Path(self.contents_manager._get_os_path(api_path))
+            os_path.unlink() 
+            CREATED.remove(api_path)
 
 
 
