@@ -8,12 +8,27 @@ define([
     "use strict";
 
     function add_exit_event() {
-        $(window).on('beforeunload', function (event) { 
-            var path = Jupyter.notebook.notebook_path
-            var kernel = Jupyter.notebook.kernel.id
-            $.get('/exit', {'path': path, 'kernel': kernel});
+        $(window).on('beforeunload', function () { 
+            var path = Jupyter.notebook.notebook_path;
+            var kernel = Jupyter.notebook.kernel.id;
+            $.get('/noterminal/exit', {'path': path, 'kernel': kernel});
         });
-        return null;
+    }
+
+    function add_immortalize_action() {
+        var handler = function () {
+            var path = Jupyter.notebook.notebook_path;
+            $.get('/noterminal/immortalize', {'path': path});
+        };
+
+        var action = {
+            icon: 'fa-comment-heart-square', // a font-awesome class used on buttons, etc
+            help    : 'Stop this notebook from dying when you close the tab',
+            help_index : 'zz',
+            handler : handler
+        };
+
+        Jupyter.actions.register(action, 'immortalize', 'noterminal');
     }
 
     function add_open_action() {
@@ -35,6 +50,7 @@ define([
     function init() {
         add_exit_event();
         add_open_action();
+        add_immortalize_action();
     }
 
     function load_extension() {
