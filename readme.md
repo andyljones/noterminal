@@ -1,4 +1,4 @@
-Sometimes you want a transient notebook. This extension adds a `t,t` shortcut to create a new, temporary notebook which will be destroyed when you close the tab.
+Sometimes you want a transient notebook. This extension adds a `t,t` shortcut to create a new, temporary notebook which can be destroyed with `d,d`.
 
 ### Dev Install
 Install the server extension:
