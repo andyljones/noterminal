@@ -7,24 +7,6 @@ define([
 ], function($, events, Jupyter) {
     "use strict";
 
-    function add_delete_action() {
-        var handler = function () {
-            var path = Jupyter.notebook.notebook_path;
-            var kernel = Jupyter.notebook.kernel.id;
-            $.get('/noterminal/delete', {'path': path, 'kernel': kernel});
-        };
-
-        var action = {
-            icon: 'fa-comment-plus-square', // a font-awesome class used on buttons, etc
-            help    : 'Delete a noterminal notebook',
-            help_index : 'zz',
-            handler : handler
-        };
-
-        Jupyter.actions.register(action, 'delete', 'noterminal');
-        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('d,d', 'noterminal:delete');
-    }
-
     function add_open_action() {
         var handler = function () {
             window.open('/noterminal', '_blank');
@@ -41,8 +23,26 @@ define([
         Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,t', 'noterminal:create');
     }
 
+    function add_delete_action() {
+        var handler = function () {
+            var path = Jupyter.notebook.notebook_path;
+            var kernel = Jupyter.notebook.kernel.id;
+            $.get('/noterminal/delete', {'path': path, 'kernel': kernel});
+            Jupyter.notification_area.widget('kernel').danger('Deleted');
+        };
+
+        var action = {
+            icon: 'fa-comment-plus-square', // a font-awesome class used on buttons, etc
+            help    : 'Delete a noterminal notebook',
+            help_index : 'zz',
+            handler : handler
+        };
+
+        Jupyter.actions.register(action, 'delete', 'noterminal');
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,q', 'noterminal:delete');
+    }
+
     function init() {
-        add_exit_event();
         add_open_action();
         add_delete_action();
     }

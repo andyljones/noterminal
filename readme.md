@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 Sometimes you want a transient notebook. This extension adds a `t,t` shortcut to create a new, temporary notebook which can be destroyed with `d,d`.
+=======
+Sometimes you want a transient notebook. This extension adds a `t,t` shortcut to create a new, temporary notebook which can be destroyed with `q,q`.
+>>>>>>> e5eadee78b2c1a5bc4303a6825bf5700dd8fb136
 
 ### Dev Install
 Install the server extension:
