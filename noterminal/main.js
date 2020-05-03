@@ -7,30 +7,6 @@ define([
 ], function($, events, Jupyter) {
     "use strict";
 
-    function add_exit_event() {
-        $(window).on('beforeunload', function () { 
-            var path = Jupyter.notebook.notebook_path;
-            var kernel = Jupyter.notebook.kernel.id;
-            $.get('/noterminal/exit', {'path': path, 'kernel': kernel});
-        });
-    }
-
-    function add_immortalize_action() {
-        var handler = function () {
-            var path = Jupyter.notebook.notebook_path;
-            $.get('/noterminal/immortalize', {'path': path});
-        };
-
-        var action = {
-            icon: 'fa-comment-heart-square', // a font-awesome class used on buttons, etc
-            help    : 'Stop this notebook from dying when you close the tab',
-            help_index : 'zz',
-            handler : handler
-        };
-
-        Jupyter.actions.register(action, 'immortalize', 'noterminal');
-    }
-
     function add_open_action() {
         var handler = function () {
             window.open('/noterminal', '_blank');
@@ -47,10 +23,27 @@ define([
         Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,t', 'noterminal:create');
     }
 
+    function add_delete_action() {
+        var handler = function () {
+            var path = Jupyter.notebook.notebook_path;
+            var kernel = Jupyter.notebook.kernel.id;
+            $.get('/noterminal/delete', {'path': path, 'kernel': kernel});
+        };
+
+        var action = {
+            icon: 'fa-comment-plus-square', // a font-awesome class used on buttons, etc
+            help    : 'Delete a noterminal notebook',
+            help_index : 'zz',
+            handler : handler
+        };
+
+        Jupyter.actions.register(action, 'delete', 'noterminal');
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('q,q', 'noterminal:delete');
+    }
+
     function init() {
-        add_exit_event();
         add_open_action();
-        add_immortalize_action();
+        add_delete_action();
     }
 
     function load_extension() {
