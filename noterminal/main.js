@@ -27,13 +27,14 @@ define([
         var handler = function () {
             var path = Jupyter.notebook.notebook_path;
             var kernel = Jupyter.notebook.kernel.id;
-            $.get('/noterminal/delete', {'path': path, 'kernel': kernel});
-
-            /**
-             * allow closing of new tabs in Chromium, impossible in FF
-             */
-            window.open('', '_self', '');
-            window.close();
+            $.get('/noterminal/delete', {'path': path, 'kernel': kernel})
+                .then(() => {
+                    Jupyter.notification_area.widget('kernel').danger('Deleted');
+                    /**
+                     * allow closing of new tabs in Chromium, impossible in FF
+                     */
+                    window.open('', '_self', '');
+                    window.close();});
         };
 
         var action = {
@@ -44,7 +45,7 @@ define([
         };
 
         Jupyter.actions.register(action, 'delete', 'noterminal');
-        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('q,q', 'noterminal:delete');
+        Jupyter.keyboard_manager.command_shortcuts.add_shortcut('t,q', 'noterminal:delete');
     }
 
     function init() {
