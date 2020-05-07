@@ -28,6 +28,12 @@ define([
             var path = Jupyter.notebook.notebook_path;
             var kernel = Jupyter.notebook.kernel.id;
             $.get('/noterminal/delete', {'path': path, 'kernel': kernel});
+
+            /**
+             * allow closing of new tabs in Chromium, impossible in FF
+             */
+            window.open('', '_self', '');
+            window.close();
         };
 
         var action = {
