@@ -9,7 +9,9 @@ define([
 
     function add_open_action() {
         var handler = function () {
-            window.open('/noterminal', '_blank');
+            var path = Jupyter.notebook.notebook_path;
+
+            window.open('/noterminal-create/' + path, '_blank');
         };
 
         var action = {
@@ -27,7 +29,7 @@ define([
         var handler = function () {
             var path = Jupyter.notebook.notebook_path;
             var kernel = Jupyter.notebook.kernel.id;
-            $.get('/noterminal/delete', {'path': path, 'kernel': kernel})
+            $.get('/noterminal-delete', {'path': path, 'kernel': kernel})
                 .then(() => {
                     Jupyter.notification_area.widget('kernel').danger('Deleted');
                     /**
