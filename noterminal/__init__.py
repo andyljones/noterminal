@@ -20,7 +20,7 @@ class NoterminalHandler(IPythonHandler):
 
     @web.authenticated
     def get(self):
-        path = Path(self.request.uri)
+        path = Path(self.request.path)
         # If the frontend's sent us a full ipynb path, then get the parent
         if path.suffix != '':
             path = path.parent
