@@ -11,8 +11,8 @@ from notebook.utils import url_path_join
 from notebook.base.handlers import IPythonHandler
 from pathlib import Path
 import uuid
-import aljpy
 from urllib.parse import unquote
+import humanhash
 
 DEFAULT = """{"cells": [], "metadata": {}, "nbformat": 4, "nbformat_minor": 2}"""
 
@@ -27,7 +27,7 @@ class NoterminalHandler(IPythonHandler):
 
         dir = path.relative_to('/noterminal-create')
 
-        api_path = dir / f'.{aljpy.humanhash(n=2)}.ipynb'
+        api_path = dir / f'.{humanhash.uuid(words=2)[0]}.ipynb'
         os_path = Path(self.contents_manager._get_os_path(str(api_path)))
         if os_path.parent.exists():
             self.log.info(f'Creating noterminal at {api_path}')

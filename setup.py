@@ -10,5 +10,5 @@ setup(name='noterminal',
       install_requires=[
             'jupyter',
             'jupyter_nbextensions_configurator',
-            'aljpy',
+            'humanhash3'
       ])
